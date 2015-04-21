@@ -1,0 +1,10 @@
+{
+  "name": "dockerfleeg",
+  "description": "Dockerized version of the ODI Quirkafleeg",
+  "scripts": {
+    "run-shell": "docker run -ti gilesdring/docker-quirkafleeg bash",
+    "run-root-shell": "docker run -u root -ti gilesdring/docker-quirkafleeg bash",
+    "build": "docker build -t gilesdring/docker-quirkafleeg ."
+  },
+  "author": "Giles Dring <gilesdring@gmail.com>"
+}
