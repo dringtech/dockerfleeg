@@ -25,8 +25,8 @@ RUN gem install bundle
 WORKDIR /home/docker
 
 # Add build scripts
-ADD Gemfile scripts/make-env.sh scripts/setup-component.sh credentials/ ./
-ADD templates/ templates/
+COPY Gemfile scripts/make-env.sh scripts/setup-component.sh credentials/ ./
+COPY templates/ templates/
 RUN chown -R docker.docker *; chmod u+x *.sh
 
 USER docker
@@ -51,7 +51,7 @@ RUN ./setup-component.sh rummager      search         10000
 
 # Setup the components
 RUN sudo apt-get install libaspell
-ADD scripts/manage-services.sh scripts/setup-signon.sh ./
+COPY scripts/manage-services.sh scripts/setup-signon.sh ./
 RUN sudo chown -R docker.docker *; chmod u+x *.sh
 
 RUN ./manage-services.sh start-all
