@@ -2,9 +2,9 @@
   "name": "dockerfleeg",
   "description": "Dockerized version of the ODI Quirkafleeg",
   "scripts": {
-    "run-shell": "docker run -ti gilesdring/docker-quirkafleeg bash",
+    "run-shell": "docker run -ti gilesdring/dockerfleeg bash",
     "run-root-shell": "docker run -u root -ti gilesdring/dockerfleeg bash",
-    "build": "docker build -t gilesdring/docker-quirkafleeg . | tee build.log"
+    "build": "docker build -t gilesdring/dockerfleeg . | tee build.log"
   },
   "author": "Giles Dring <gilesdring@gmail.com>"
 }
