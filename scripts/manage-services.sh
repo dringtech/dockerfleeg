@@ -6,16 +6,18 @@ LOG_DIR=${SERVICE_HOME}/logs
 
 function start-rails-service {
     local service=$1
+    local pidfile=${SERVICE_HOME}/$service/${service}.pid
 
     pushd ${SERVICE_HOME}/$service
     foreman start > ${LOG_DIR}/${service}.log 2> ${LOG_DIR}/${service}.err &
-    echo $! > ${service}.pid
+    echo $! > ${pidfile}
     popd
 }
 
 function stop-rails-service {
+    local pidfile=${SERVICE_HOME}/$service/${service}.pid
     local service=$1
-    kill $(cat ${SERVICE_HOME}/$service/${service}.pid)
+    kill $(${pidfile}) && rm ${pidfile}
 }
 
 function start-databases {
