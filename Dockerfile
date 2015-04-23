@@ -1,3 +1,4 @@
+# TODO change this to debian
 FROM ubuntu-upstart
 MAINTAINER Giles Dring <gilesdring@gmail.com>
 
@@ -14,33 +15,47 @@ RUN apt-get update && apt-get install -y mongodb
 # Create the MongoDB data directory
 RUN mkdir -p /data/db
 
-# Setup users and install packages
-# RUN dpkg-divert --local --rename --add /sbin/initctl && \
-#     ln -s /bin/true /sbin/initctl && \
+# Install apt packages
 RUN apt-get install -y git curl ruby ruby-dev nginx mysql-server \
         make g++ libmysqlclient-dev libsqlite3-dev libxml2-dev libxslt-dev
 
+# Install ruby pre-reqs
+RUN gem install bundle
+
 WORKDIR /home/docker
 
-# Add startup scripts for background services: Nginx, MySQL and MongoDB
-ADD scripts/ .
-RUN chown docker.docker *
-RUN chmod u+x *.sh
+# Add build scripts
+ADD Gemfile scripts/make-env.sh scripts/setup-component.sh credentials/ ./
+ADD templates/ templates/
+RUN chown -R docker.docker *; chmod u+x *.sh
 
 USER docker
 # Create directory to contain logs
 ENV LOGS=logs
 RUN mkdir $LOGS
 
+RUN bundle install
+RUN ./make-env.sh
+
 ENV organisation='theodi'
 
-# Install build pre-reqs
-RUN gem install bundle foreman
+# Initialise the components
+RUN ./setup-component.sh signonotron2  signon          3000
+RUN ./setup-component.sh static        static          4000
+RUN ./setup-component.sh panopticon    panopticon      5000
+RUN ./setup-component.sh publisher     publisher       6000
+RUN ./setup-component.sh asset-manager asset-manager   7000
+RUN ./setup-component.sh content_api   contentapi      8000
+RUN ./setup-component.sh frontend-www  www             9000
+RUN ./setup-component.sh rummager      search         10000
 
-# SETUP signon
-RUN git clone https://github.com/${organisation}/signonotron2.git signon
-WORKDIR signon
-RUN bundle
+# Setup the components
+RUN sudo apt-get install libaspell
+ADD scripts/manage-services.sh scripts/setup-signon.sh ./
+RUN sudo chown -R docker.docker *; chmod u+x *.sh
+
+RUN ./manage-services.sh start-all
+RUN ./setup-signon.sh
 
 # Do we even need to get this anymore?
 # TODO remove dependency on setup.rb script
