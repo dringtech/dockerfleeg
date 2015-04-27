@@ -20,3 +20,25 @@ Again, for Mac OS X, I strongly recommend [Homebrew][HB], which allows this
     brew install boot2docker node
 
 [HB]: http://brew.sh/ "Link to Homebrew homepage"
+
+## Preparing the environment
+
+Run `./prepare.sh` script
+
+
+if running in `boot2docker`, make sure you do this:
+
+    VBoxManage modifyvm "boot2docker-vm" natpf1 "tcp-port80,tcp,,80,,80";
+
+(or if already running...)
+
+    VBoxManage controlvm "boot2docker-vm" natpf1 "tcp-port80,tcp,,80,,80";
+
+Run the image
+
+    docker run -p 80:80 -ti gilesdring/dockerfleeg bash
+
+
+# DNS setup
+
+http://passingcuriosity.com/2013/dnsmasq-dev-osx/

@@ -1,0 +1,65 @@
+./manage-services.sh start-databases
+./prepare.sh
+./manage-services.sh stop-databases
+
+./manage-services.sh start-all
+
+
+
+User created: user.name <alice>
+              user.email <alice@example.com>
+              signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
+              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=5pZDjDHB4QTStzz8NdCN
+Creating user 'bob'
+User created: user.name <bob>
+              user.email <bob@example.com>
+              signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
+              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=U5VVNu5wCxg7R12dVzPb
+Creating indices for rummager
+
+
+dockerfleeg_1
+
+User created: user.name <alice>
+              user.email <alice@example.com>
+              signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
+              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=H1kzLpMbhcGJGyzevznp
+Creating user 'bob'
+User created: user.name <bob>
+              user.email <bob@example.com>
+              signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
+              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=7beb2NqXaWwiL3gKnzjW
+
+
+
+alice a1s2d3f4g5h6
+bob 
+
+
+
+Status
+
+signon          yes
+static          yes
+panopticon      yes
+publisher       yes
+asset-manager   no
+contentapi      no
+www             no
+search          fails
+
+
+
+changed ffi-aspell gem version to 1.0.2
+
+
+
+Install redis
+sudo apt-get install tcl8.5
+wget http://download.redis.io/releases/redis-2.8.9.tar.gz
+tar xvf redis-2.8.9.tar.gz
+cd redis-2.8.9
+make
+sudo make install
+cd utils
+sudo ./install_server.sh
