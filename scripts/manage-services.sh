@@ -15,9 +15,10 @@ function start-rails-service {
 }
 
 function stop-rails-service {
-    local pidfile=${SERVICE_HOME}/$service/${service}.pid
     local service=$1
-    kill $(${pidfile}) && rm ${pidfile}
+    local pidfile=${SERVICE_HOME}/$service/${service}.pid
+    echo Stopping ${service}
+    [ -f ${pidfile} ] && kill $(cat ${pidfile}) && rm ${pidfile}
 }
 
 function start-databases {
