@@ -64,6 +64,8 @@ function create_user {
 
 pushd ~docker  > /dev/null
 
+. ./env
+
 # Create signonotron user
 echo "Initialising signonotron user"
 sudo mysql -v < db_setup.sql

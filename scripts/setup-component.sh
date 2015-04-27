@@ -3,6 +3,9 @@
 # Make sure we're running in the docker home directory
 pushd ~docker
 
+# Source the local variables
+. ./env
+
 # Capture local variables
 theirname=$1
 ourname=$2
