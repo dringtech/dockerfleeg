@@ -60,4 +60,7 @@ COPY scripts/manage-services.sh scripts/prepare.sh scripts/db_setup.sql ./
 RUN sudo chown -R docker.docker *; chmod u+x *.sh
 
 # Define the port
-EXPOSE 80
+EXPOSE 80 443
+# Specify the command
+# TODO Make this a more sensible startup component
+CMD bash
