@@ -8,10 +8,10 @@ function start-rails-service {
     local service=$1
     local pidfile=${SERVICE_HOME}/$service/${service}.pid
 
-    pushd ${SERVICE_HOME}/$service
+    pushd ${SERVICE_HOME}/$service > /dev/null
     foreman start > ${LOG_DIR}/${service}.log 2> ${LOG_DIR}/${service}.err &
     echo $! > ${pidfile}
-    popd
+    popd > /dev/null
 }
 
 function stop-rails-service {
