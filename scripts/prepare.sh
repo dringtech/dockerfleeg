@@ -49,7 +49,7 @@ function generate_content_api_bearer_tokens {
         token=$(bundle exec rake \
             api_clients:create[frontends,"frontends@example.com",contentapi,access_unpublished] |\
             get_bearer_token)
-    echo QUIRKAFLEEG_FRONTENT_CONTENTAPI_BEARER_TOKEN=${token} >> ${OAUTH_FILE}
+    echo QUIRKAFLEEG_FRONTEND_CONTENTAPI_BEARER_TOKEN=${token} >> ${OAUTH_FILE}
 }
 
 function create_user {
