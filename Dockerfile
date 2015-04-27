@@ -52,7 +52,8 @@ RUN ./setup-component.sh rummager      search         10000
 # Install runtime dependencies
 RUN sudo apt-get install -y libaspell15 openjdk-6-jre node && \
     wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.7.deb && \
-    sudo dpkg -i elasticsearch-0.90.7.deb
+    sudo dpkg -i elasticsearch-0.90.7.deb && \
+    rm elasticsearch-0.90.7.deb
 
 # Copy over the setup scripts
 COPY scripts/manage-services.sh scripts/prepare.sh scripts/db_setup.sql ./
