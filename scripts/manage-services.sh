@@ -58,4 +58,6 @@ function stop-all {
     stop-databases
 }
 
+. ${SERVICE_HOME}/env
+
 $*

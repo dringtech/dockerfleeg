@@ -3,7 +3,7 @@
 OAUTH_FILE=~docker/oauthcreds
 
 function format_env_variable {
-    awk 'BEGIN {FS="="} {sub(/-/,"_"); sub(/ */, ""); print toupper($1) "=" $2}'
+    awk 'BEGIN {FS="="} {sub(/-/,"_"); gsub(/ +/, ""); print toupper($1) "=" $2}'
 }
 
 function get_bearer_token {
