@@ -24,11 +24,13 @@ function stop-rails-service {
 function start-databases {
     sudo mongod --logpath $LOGS/mongo.log &
     sudo mysqld 2> $LOGS/mysql.err > $LOGS/mysql.log &
+    sudo service elasticsearch start
 }
 
 function stop-databases {
     sudo mongod --shutdown
     sudo mysqladmin shutdown
+    sudo service elasticsearch stop
 }
 
 function start-nginx {

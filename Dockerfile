@@ -49,16 +49,14 @@ RUN ./setup-component.sh content_api   contentapi      8000
 RUN ./setup-component.sh frontend-www  www             9000
 RUN ./setup-component.sh rummager      search         10000
 
-# Setup the components
-RUN sudo apt-get install libaspell
-COPY scripts/manage-services.sh scripts/setup-signon.sh ./
+# Install runtime dependencies
+RUN sudo apt-get install -y libaspell15 openjdk-6-jre node && \
+    wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-0.90.7.deb && \
+    sudo dpkg -i elasticsearch-0.90.7.deb
+
+# Copy over the setup scripts
+COPY scripts/manage-services.sh scripts/prepare.sh scripts/db_setup.sql ./
 RUN sudo chown -R docker.docker *; chmod u+x *.sh
 
-RUN ./manage-services.sh start-all
-RUN ./setup-signon.sh
-
-# Do we even need to get this anymore?
-# TODO remove dependency on setup.rb script
-# RUN git clone https://github.com/gilesdring/quirkafleeg.git
-# WORKDIR quirkafleeg
-# RUN ./setup.rb
+# Define the port
+EXPOSE 80
