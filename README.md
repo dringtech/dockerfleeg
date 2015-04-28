@@ -23,8 +23,17 @@ Again, for Mac OS X, I strongly recommend [Homebrew][HB], which allows this
 
 ## Preparing the environment
 
-Run `./prepare.sh` script
+# Start the dependent docker images
 
+Dockerfleeg depends on running docker containers for
+[redis](https://registry.hub.docker.com/_/redis/),
+[mysql](https://registry.hub.docker.com/_/mysql/),
+[mongo](https://registry.hub.docker.com/_/mongo/) and
+[elasticsearch](https://registry.hub.docker.com/_/elasticsearch/)
+
+These can be set up with the following commands
+
+    docker run --name dockerfleeg-redis -d redis
 
 if running in `boot2docker`, make sure you do this:
 
@@ -36,7 +45,11 @@ if running in `boot2docker`, make sure you do this:
 
 Run the image
 
-    docker run -p 80:80 -ti gilesdring/dockerfleeg bash
+    docker run -p 80:80 --link dockerfleeg-redis:redis -ti gilesdring/dockerfleeg bash
+
+Run `./prepare.sh` script
+
+
 
 
 # DNS setup
