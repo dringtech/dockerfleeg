@@ -1,113 +1,49 @@
 #!/usr/bin/env bash
 
-OAUTH_FILE=~docker/oauthcreds
+BASE_DIR=~docker
 
-function format_env_variable {
-    awk 'BEGIN {FS="="} {sub(/-/,"_"); gsub(/ +/, ""); print toupper($1) "=" $2}'
-}
+pushd ${BASE_DIR} > /dev/null
 
-function get_bearer_token {
-    awk '/^Access token:/ {print $3}'
-}
+# Install bundle
+sudo gem install bundle
 
-function generate_app_key {
-    local app=$1
-    local description=$2
-    local domain=${GOVUK_APP_DOMAIN}
+# Install dependencies
+bundle install
 
-    echo "Generating application keys for ${app}"
-    bundle exec rake applications:create name=${app} \
-        description="${description}" home_uri="http://${app}.${domain}" \
-        redirect_uri="http://${app}.${domain}/auth/gds/callback" \
-        supported_permissions=signin,access_unpublished | \
-        grep ^config | sed -e "s/^config\./${app}_/" -e "s/'//g" | \
-        format_env_variable \
-        >> ${OAUTH_FILE}
-}
+# Patch the search Gemfile
+sed -i "/ffi-aspell/s/0.0.3/1.0.2/" search/Gemfile
 
-function generate_asset_manager_bearer_token {
-    local app=$1
+while read -r ourname theirname port
+do
+    ./prepare-component.sh ${theirname} ${ourname} ${port}
+done < app.lst
 
-    echo "Generating bearer token for ${app}"
-    token=$(bundle exec rake \
-        api_clients:create[${app},"${app}@example.com",asset-manager,signin] |\
-        get_bearer_token)
-    cat - << BEARER_TOKENS | format_env_variable >> ${OAUTH_FILE}
-${app}_asset_manager_bearer_token=${token}
-${app}_api_client_bearer_token=${token}
-BEARER_TOKENS
-}
+# Setup redis
+bash ${BASE_DIR}/templates/redis.yml > signon/config/redis.yml
+bash ${BASE_DIR}/templates/redis.yml > publisher/config/redis.yml
 
-function generate_content_api_bearer_tokens {
-    local domain=${GOVUK_APP_DOMAIN}
+# Setup mysql
+# TODO Fix this to be a proper template
+sed -i "/^development:/a \  host: ${MYSQL_PORT_3306_TCP_ADDR}" signon/config/database.yml
+sed -i "/^test:/a \  host: ${MYSQL_PORT_3306_TCP_ADDR}" signon/config/database.yml
 
-    echo "Generating content-api bearer tokens for frontends"
-    bundle exec rake applications:create name=frontends \
-        description="Front end apps" home_uri="http://frontends.${domain}" \
-        redirect_uri="http://frontends.${domain}/auth/gds/callback" \
-        supported_permissions=access_unpublished
-        token=$(bundle exec rake \
-            api_clients:create[frontends,"frontends@example.com",contentapi,access_unpublished] |\
-            get_bearer_token)
-    echo QUIRKAFLEEG_FRONTEND_CONTENTAPI_BEARER_TOKEN=${token} >> ${OAUTH_FILE}
-}
+# Setup mongo hosts in mongoid.yml files
+sed -i "s/host: *localhost/host: ${MONGO_PORT_27017_TCP_ADDR}/g" \
+    panopticon/config/mongoid.yml \
+    contentapi/mongoid.yml \
+    .bundler/ruby/1.9.1/odi_content_models-d238a8736a05/config/mongoid.yml \
+    .bundler/ruby/1.9.1/odi_content_models-c74507b76c2e/config/mongoid.yml \
+    asset-manager/config/mongoid.yml \
+    publisher/config/mongoid.yml
 
-function create_user {
-    local apps=panopticon,publisher,asset-manager,contentapi
-    local user=$1
-    local email=$2
+# Setup elasticsearch host
+sed -i "s/base_uri\: *.*/base_uri\: \"http:\/\/${ELASTICSEARCH_PORT_9200_TCP_ADDR}:${ELASTICSEARCH_PORT_9200_TCP_PORT}\"/" search/elasticsearch.yml
 
-    echo "Creating user '${user}'"
-    bundle exec rake users:create name=${user} email=${email} \
-        applications=${apps}
-}
-
-pushd ~docker  > /dev/null
-
-. ./env
-
-# Create signonotron user
-echo "Initialising signonotron user"
-sudo mysql -v < db_setup.sql
-
-# Setup signon
-pushd signon   > /dev/null
-
-echo "Configuring signon database"
-bundle exec rake db:create
-bundle exec rake db:migrate
-
-bundle exec ./script/make_oauth_work_in_dev
-
-generate_app_key panopticon    "metadata management"
-generate_app_key publisher     "content editing"
-generate_app_key asset-manager "media uploading"
-generate_app_key contentapi    "internal API for content access"
-
-generate_asset_manager_bearer_token publisher
-generate_asset_manager_bearer_token contentapi
-
-generate_content_api_bearer_tokens
-
-create_user alice alice@example.com
-create_user bob bob@example.com
-
-popd  > /dev/null
-
-# Setup search
-pushd search > /dev/null
-
-echo "Creating indices for rummager"
-RUMMAGER_INDEX=all bundle exec rake rummager:migrate_index
-
-popd > /dev/null
-
-# Setup panopticon
-pushd panopticon > /dev/null
-
-echo "Setting up panopticon"
-bundle exec rake db:seed
-
-popd > /dev/null
+# Create procfile
+echo web: sudo nginx -g "daemon off;" > Procfile
+while read -r app theirname port; do
+    cat ${app}/Procfile | sed -e "s/\$PORT/${port}/" -e "/^.*:/s/^/${app}_/" -e "s/:/: cd ${app} \&\&/"
+    echo
+done < app.lst >> Procfile
 
 popd > /dev/null

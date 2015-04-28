@@ -11,16 +11,6 @@ theirname=$1
 ourname=$2
 port=$3
 
-# Get or refresh the code
-if [ -d "$DIRECTORY" ]; then
-  pushd ${ourname}
-  git pull origin master
-  popd
-else
-  # Control will enter here if $DIRECTORY exists.
-  git clone https://github.com/${organisation}/${theirname}.git ${ourname}
-fi
-
 # Change to repo directory
 pushd ${2}
 
