@@ -1,0 +1,8 @@
+signonotron2  signon         3000
+static        static         4000
+panopticon    panopticon     5000
+publisher     publisher      6000
+asset-manager asset-manager  7000
+content_api   contentapi     8000
+frontend-www  www            9000
+rummager      search        10000

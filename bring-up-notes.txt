@@ -63,3 +63,21 @@ make
 sudo make install
 cd utils
 sudo ./install_server.sh
+
+
+
+
+# Gem container
+
+docker create -v /ruby_gems/1.9.3 --name gem-store busybox
+
+docker run -d --volumes-from gem-store my_project_name
+
+# Prepare apps
+
+while read -r theirname ourname;
+do
+       pushd ${ourname}
+       bundle install
+       popd
+done < repositories

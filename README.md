@@ -45,7 +45,7 @@ if running in `boot2docker`, make sure you do this:
 
 Run the image
 
-    docker run -p 80:80 --link dockerfleeg-redis:redis -ti gilesdring/dockerfleeg bash
+    docker run -p 80:80 -p 443:443 --volumes-from gem-store --link dockerfleeg-redis:redis -ti gilesdring/dockerfleeg bash
 
 Run `./prepare.sh` script
 
