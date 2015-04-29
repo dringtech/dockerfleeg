@@ -1,10 +1,12 @@
 #!/usr/bin/env bash
 
+ENV_FILE=~/.env
+
 # Make sure we're running in the docker home directory
-pushd ~docker
+pushd ~
 
 # Source the local variables
-. ./env
+. ${ENV_FILE}
 
 # Capture local variables
 theirname=$1
@@ -18,7 +20,7 @@ pushd ${2}
 bundle install
 
 # Link generated environment
-rm -f .env && ln -sf ../env .env
+rm -f .env && ln -sf ${ENV_FILE} .env
 
 # Generate foreman option file, which will be read when starting up
 if [ -f Procfile ]; then

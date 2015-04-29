@@ -2,7 +2,7 @@
 
 DOMAIN="dev"
 
-OUTFILE=./env
+OUTFILE=~/.env
 
 cat - <<-EOF > ${OUTFILE}
 GOVUK_APP_DOMAIN=${DOMAIN}

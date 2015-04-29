@@ -2,16 +2,6 @@
 
 # TODO make this fail gracefully
 
-OAUTH_FILE=~docker/oauthcreds
-
-function format_env_variable {
-    awk 'BEGIN {FS="="} {sub(/-/,"_"); gsub(/ +/, ""); print toupper($1) "=" $2}'
-}
-
-function get_bearer_token {
-    awk '/^Access token:/ {print $3}'
-}
-
 function generate_app_key {
     local app=$1
     local description=$2
@@ -21,23 +11,15 @@ function generate_app_key {
     bundle exec rake applications:create name=${app} \
         description="${description}" home_uri="http://${app}.${domain}" \
         redirect_uri="http://${app}.${domain}/auth/gds/callback" \
-        supported_permissions=signin,access_unpublished | \
-        grep ^config | sed -e "s/^config\./${app}_/" -e "s/'//g" | \
-        format_env_variable \
-        >> ${OAUTH_FILE}
+        supported_permissions=signin,access_unpublished
 }
 
 function generate_asset_manager_bearer_token {
     local app=$1
 
     echo "Generating bearer token for ${app}"
-    token=$(bundle exec rake \
-        api_clients:create[${app},"${app}@example.com",asset-manager,signin] |\
-        get_bearer_token)
-    cat - << BEARER_TOKENS | format_env_variable >> ${OAUTH_FILE}
-${app}_asset_manager_bearer_token=${token}
-${app}_api_client_bearer_token=${token}
-BEARER_TOKENS
+    bundle exec rake \
+        api_clients:create[${app},"${app}@example.com",asset-manager,signin]
 }
 
 function generate_content_api_bearer_tokens {
@@ -48,10 +30,8 @@ function generate_content_api_bearer_tokens {
         description="Front end apps" home_uri="http://frontends.${domain}" \
         redirect_uri="http://frontends.${domain}/auth/gds/callback" \
         supported_permissions=access_unpublished
-        token=$(bundle exec rake \
-            api_clients:create[frontends,"frontends@example.com",contentapi,access_unpublished] |\
-            get_bearer_token)
-    echo QUIRKAFLEEG_FRONTEND_CONTENTAPI_BEARER_TOKEN=${token} >> ${OAUTH_FILE}
+    bundle exec rake \
+        api_clients:create[frontends,"frontends@example.com",contentapi,access_unpublished]
 }
 
 function create_user {
@@ -64,14 +44,21 @@ function create_user {
         applications=${apps}
 }
 
+function run_mysql_command {
+    mysql -u 'root' -h ${MYSQL_PORT_3306_TCP_ADDR} \
+        --password=${MYSQL_ENV_MYSQL_ROOT_PASSWORD}
+}
+
 pushd ~docker  > /dev/null
 
-. ./env
+. ./.env
+
+# Lay waste to the existing databases...
+run_mysql_command < db_clean.sql
 
 # Create signonotron user
 echo "Initialising signonotron user"
-sudo mysql -v -h ${MYSQL_PORT_3306_TCP_ADDR} \
-    --password=${MYSQL_ENV_MYSQL_ROOT_PASSWORD} < db_setup.sql
+run_mysql_command < db_setup.sql
 
 # Setup signon
 pushd signon   > /dev/null

@@ -18,7 +18,7 @@ WORKDIR /home/docker
 # Add build scripts
 COPY Gemfile app.lst scripts/ credentials/ ./
 COPY templates/ templates/
-RUN chown -R docker.docker *; chmod u+x *.sh
+RUN chown -R docker.docker *; chmod u+x *.sh manage
 
 # Change to docker user
 USER docker
@@ -33,4 +33,4 @@ RUN while read -r ourname theirname port; do \
     done < app.lst
 
 EXPOSE 80 443
-CMD foreman start
+CMD bash
