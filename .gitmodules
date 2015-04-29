@@ -1,0 +1,24 @@
+[submodule "repos/signon"]
+	path = repos/signon
+	url = http://github.com/theodi/signonotron2
+[submodule "repos/static"]
+	path = repos/static
+	url = http://github.com/theodi/static
+[submodule "repos/panopticon"]
+	path = repos/panopticon
+	url = http://github.com/theodi/panopticon
+[submodule "repos/publisher"]
+	path = repos/publisher
+	url = http://github.com/theodi/publisher
+[submodule "repos/asset-manager"]
+	path = repos/asset-manager
+	url = http://github.com/theodi/asset-manager
+[submodule "repos/contentapi"]
+	path = repos/contentapi
+	url = http://github.com/theodi/content_api
+[submodule "repos/www"]
+	path = repos/www
+	url = http://github.com/theodi/frontend-www
+[submodule "repos/search"]
+	path = repos/search
+	url = http://github.com/theodi/rummager
