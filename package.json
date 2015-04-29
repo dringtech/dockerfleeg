@@ -2,7 +2,7 @@
   "name": "dockerfleeg",
   "description": "Dockerized version of the ODI Quirkafleeg",
   "scripts": {
-    "run-shell": "docker run -ti gilesdring/dockerfleeg bash",
+    "run-shell": "docker run -p 80:80 -p 443:443 --volumes-from gem-store --link dockerfleeg-redis:redis -ti gilesdring/dockerfleeg bash",
     "run-root-shell": "docker run -u root -ti gilesdring/dockerfleeg bash",
     "build": "docker build -t gilesdring/dockerfleeg . | tee build.log"
   },
