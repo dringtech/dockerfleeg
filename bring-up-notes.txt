@@ -9,27 +9,12 @@
 User created: user.name <alice>
               user.email <alice@example.com>
               signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
-              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=5pZDjDHB4QTStzz8NdCN
+              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=nyjHPVrkySHyoyDCzVrY
 Creating user 'bob'
 User created: user.name <bob>
               user.email <bob@example.com>
               signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
-              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=U5VVNu5wCxg7R12dVzPb
-Creating indices for rummager
-
-
-dockerfleeg_1
-
-User created: user.name <alice>
-              user.email <alice@example.com>
-              signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
-              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=H1kzLpMbhcGJGyzevznp
-Creating user 'bob'
-User created: user.name <bob>
-              user.email <bob@example.com>
-              signin permissions for: 'panopticon', 'publisher', 'asset-manager', 'contentapi' 
-              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=7beb2NqXaWwiL3gKnzjW
-
+              follow this link to set a password: https://signon.dev/users/invitation/accept?invitation_token=K8ph68k2JnqpQquDdbVg
 
 
 alice a1s2d3f4g5h6
@@ -63,3 +48,21 @@ make
 sudo make install
 cd utils
 sudo ./install_server.sh
+
+
+
+
+# Gem container
+
+docker create -v /ruby_gems/1.9.3 --name gem-store busybox
+
+docker run -d --volumes-from gem-store my_project_name
+
+# Prepare apps
+
+while read -r theirname ourname;
+do
+       pushd ${ourname}
+       bundle install
+       popd
+done < repositories

@@ -34,6 +34,9 @@ Dockerfleeg depends on running docker containers for
 These can be set up with the following commands
 
     docker run --name dockerfleeg-redis -d redis
+    docker run --name dockerfleeg-mysql -e MYSQL_ROOT_PASSWORD=my-secret-pw -d mysql:latest
+    docker run --name dockerfleeg-mongo -d mongo
+    docker run --name dockerfleeg-elasticsearch -d elasticsearch
 
 if running in `boot2docker`, make sure you do this:
 
@@ -45,9 +48,14 @@ if running in `boot2docker`, make sure you do this:
 
 Run the image
 
-    docker run -p 80:80 --link dockerfleeg-redis:redis -ti gilesdring/dockerfleeg bash
+    docker run -p 80:80 -p 443:443 --volumes-from gem-store -ti \
+        --link dockerfleeg-redis:redis \
+        --link dockerfleeg-mysql:mysql \
+        --link dockerfleeg-mongo:mongo \
+        --link dockerfleeg-elasticsearch:elasticsearch \
+        gilesdring/dockerfleeg bash
 
-Run `./prepare.sh` script
+Run `./prepare.sh` script and then `./init.sh`
 
 
 

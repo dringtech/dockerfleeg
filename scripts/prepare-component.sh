@@ -1,25 +1,17 @@
 #!/usr/bin/env bash
 
+ENV_FILE=~/.env
+
 # Make sure we're running in the docker home directory
-pushd ~docker
+pushd ~
 
 # Source the local variables
-. ./env
+. ${ENV_FILE}
 
 # Capture local variables
 theirname=$1
 ourname=$2
 port=$3
-
-# Get or refresh the code
-if [ -d "$DIRECTORY" ]; then
-  pushd ${ourname}
-  git pull origin master
-  popd
-else
-  # Control will enter here if $DIRECTORY exists.
-  git clone https://github.com/${organisation}/${theirname}.git ${ourname}
-fi
 
 # Change to repo directory
 pushd ${2}
@@ -28,7 +20,7 @@ pushd ${2}
 bundle install
 
 # Link generated environment
-rm -f .env && ln -sf ../env .env
+rm -f .env && ln -sf ${ENV_FILE} .env
 
 # Generate foreman option file, which will be read when starting up
 if [ -f Procfile ]; then

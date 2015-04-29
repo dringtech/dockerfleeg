@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+case $1 in 
+
+"prepare")
+    echo "Preparing environment"
+    ./prepare.sh
+    ;;
+"init")
+    echo "Initialising datastores"
+    ./init.sh
+    ;;
+"start")
+    foreman start
+    ;;
+"shell")
+    bash
+    ;;
+
+esac
