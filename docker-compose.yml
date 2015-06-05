@@ -1,0 +1,73 @@
+router:
+  build: router
+  dns: 192.168.59.3
+  ports:
+    - "80:80"
+  links:
+    - assetmanager:asset-manager
+    - contentapi
+    - panopticon
+    - publisher
+    - search
+    - signon
+    - static
+    - www
+assetmanager:
+  build: asset-manager
+  dns: 192.168.59.3
+  env_file: env
+  links:
+    - mongo
+contentapi:
+  build: contentapi
+  dns: 192.168.59.3
+  env_file: env
+  links:
+   - mongo
+panopticon:
+  build: panopticon
+  dns: 192.168.59.3
+  env_file: env
+  links:
+    - mongo
+    - redis
+publisher:
+  build: publisher
+  dns: 192.168.59.3
+  env_file: env
+  links:
+    - mongo
+    - redis
+search:
+  build: search
+  dns: 192.168.59.3
+  env_file: env
+  links:
+    - elasticsearch
+    - redis
+signon:
+  build: signon
+  dns: 192.168.59.3
+  env_file: env
+  links:
+    - mysql
+    - redis
+static:
+  build: static
+  dns: 192.168.59.3
+  env_file: env
+www:
+  build: www
+  dns: 192.168.59.3
+  env_file: env
+
+redis:
+  image: redis
+mysql:
+  image: mysql
+  environment:
+    MYSQL_ROOT_PASSWORD: my-secret-pw
+mongo:
+  image: mongo
+elasticsearch:
+  image: elasticsearch
