@@ -1,0 +1,11 @@
+diff --git a/config/mongoid.yml b/config/mongoid.yml
+index 5a6e0c8..b92f809 100644
+--- a/config/mongoid.yml
++++ b/config/mongoid.yml
+@@ -1,5 +1,5 @@
+ development:
+-  host: localhost
++  host: mongo
+   database: govuk_assets_development
+   persist_in_safe_mode: true
+ 

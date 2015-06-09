@@ -1,0 +1,35 @@
+diff --git a/config/database.yml b/config/database.yml
+index ce937c0..5d053b5 100644
+--- a/config/database.yml
++++ b/config/database.yml
+@@ -11,6 +11,7 @@ development: &development
+   pool: 5
+   username: signonotron2
+   password: signonotron2
++  host: mysql
+ 
+ # Warning: The database defined as "test" will be erased and
+ # re-generated from your development database when you run "rake".
+@@ -23,6 +24,7 @@ test: &test
+   pool: 5
+   username: signonotron2
+   password: signonotron2
++  host: mysql
+ 
+ production:
+   adapter: mysql2
+@@ -32,4 +34,4 @@ production:
+   host: localhost
+ 
+ cucumber:
+-  <<: *test
+\ No newline at end of file
++  <<: *test
+diff --git a/config/redis.yml b/config/redis.yml
+index 6bf5f4d..256d49a 100644
+--- a/config/redis.yml
++++ b/config/redis.yml
+@@ -1,2 +1,2 @@
+-host: 127.0.0.1
++host: redis
+ port: 6379
