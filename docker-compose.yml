@@ -69,5 +69,7 @@ mysql:
     MYSQL_ROOT_PASSWORD: my-secret-pw
 mongo:
   image: mongo
+  ports:
+    - "27017:27017"
 elasticsearch:
   image: elasticsearch
