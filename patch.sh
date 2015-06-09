@@ -1,4 +1,4 @@
-targets=asset-manager contentapi panopticon publisher search signon www
+targets="asset-manager contentapi panopticon publisher search signon www"
 
 for target in $targets
 do
