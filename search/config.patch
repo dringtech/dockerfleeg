@@ -1,0 +1,37 @@
+diff --git a/Gemfile b/Gemfile
+index 2f17464..d9a0e68 100644
+--- a/Gemfile
++++ b/Gemfile
+@@ -19,7 +19,7 @@ gem "rest-client", "1.6.7"
+ gem "logging", "1.8.1"
+ gem 'nokogiri', "~> 1.5"
+ gem 'whenever', require: false
+-gem 'ffi-aspell', "0.0.3"
++gem 'ffi-aspell', "1.0.2"
+ gem "slop", "3.4.5"
+ gem "sidekiq", "2.13.0"
+ # pin to version that includes security vulnerability fix
+diff --git a/config.rb b/config.rb
+index c2a769a..fd50747 100644
+--- a/config.rb
++++ b/config.rb
+@@ -3,6 +3,9 @@ require_relative "env"
+ require "search_config"
+ require "config/logging"
+ 
++# Fix to resolver issue
++require 'resolv-replace'
++
+ set :search_config, SearchConfig.new
+ set :default_index_name, "dapaas"
+ 
+diff --git a/elasticsearch.yml b/elasticsearch.yml
+index 10ef6a2..6855fcb 100644
+--- a/elasticsearch.yml
++++ b/elasticsearch.yml
+@@ -1,4 +1,4 @@
+-base_uri: "http://localhost:9200"
++base_uri: "http://elasticsearch:9200"
+ index_names: ["dapaas", "odi"]
+ 
+ # ODI: these can all be ignored
