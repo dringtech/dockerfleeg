@@ -8,3 +8,4 @@ index 5a6e0c8..b92f809 100644
 +  host: mongo
    database: govuk_assets_development
    persist_in_safe_mode: true
+ 
