@@ -30,6 +30,15 @@ NR>1 {
 }'
 }
 
+function format_user_invitation {
+    awk '
+BEGIN { FS="\t" }
+NR>1 {
+    name = toupper($1)
+    print name "_INVITATION_URL=http://signon.localdev/users/invitation/accept?invitation_token=" $3
+}'
+}
+
 function run_mysql_command {
     mysql -u 'root' -h ${MYSQL_PORT_3306_TCP_ADDR} \
         --password=${MYSQL_ENV_MYSQL_ROOT_PASSWORD}
@@ -77,8 +86,8 @@ AND
 EOF
 
 # List users
-run_mysql_command <<EOF
+run_mysql_command <<EOF | format_user_invitation
 USE signonotron2_development;
-SELECT email, invitation_token FROM users WHERE invitation_token IS NOT NULL;
+SELECT name, email, invitation_token FROM users WHERE invitation_token IS NOT NULL;
 EOF
 
