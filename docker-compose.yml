@@ -82,6 +82,8 @@ mysql:
   image: mysql
   environment:
     MYSQL_ROOT_PASSWORD: my-secret-pw
+  ports:
+    - 3306:3306
 mongo:
   image: mongo
   ports:
