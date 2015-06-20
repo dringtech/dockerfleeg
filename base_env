@@ -1,3 +1,14 @@
+DEBUG=true
+
+# Fix resolver
+FIX_RESOLV=true
+
+# Hosts for data store services
+MYSQL_HOST=mysql
+MONGOID_HOST=mongo
+REDIS_HOST=redis
+ELASTICSEARCH_HOST=elasticsearch
+
 # Redis configuration variables
 REDIS_PROVIDER=REDIS_PORT_6379_TCP
 QUIRKAFLEEG_SIGNON_REDIS_HOST=redis
