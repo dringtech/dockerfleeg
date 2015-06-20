@@ -86,6 +86,7 @@ mysql:
     - 3306:3306
 mongo:
   image: mongo
+  command: --smallfiles
   ports:
     - "27017:27017"
 elasticsearch:
