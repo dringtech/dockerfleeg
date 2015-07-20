@@ -1,5 +1,7 @@
 DEBUG=true
 
+DOCKERIZED=true
+
 # Fix resolver
 FIX_RESOLV=true
 
