@@ -8,7 +8,8 @@ WORKDIR /${COMPONENT}
 # Need to add Gemfile and Gemfile.lock to ensure that gems are installed correctly
 ADD repo/Gemfile /${COMPONENT}/Gemfile
 ADD repo/Gemfile.lock /${COMPONENT}/Gemfile.lock
-RUN bundle install
+RUN bundle config mirror.https://rubygems.org http://rubygems.org && \
+    bundle install
 ADD repo /${COMPONENT}
 ENV DOMAIN=localdev PORT=8000
 ENV GOVUK_APP_DOMAIN=${DOMAIN} DEV_DOMAIN=${DOMAIN} \
